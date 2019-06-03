@@ -292,9 +292,30 @@ ENV HOME_DIR="/home/${USER}"
 ENV WORK_DIR="${HOME_DIR}" \
     PATH="${HOME_DIR}/.local/bin:${PATH}"
 
+# Install python 3.7 dependencies
+RUN ${RETRY} apt -y install -qq --no-install-recommends \
+        build-essential zlib1g-dev \
+        libncurses5-dev libgdbm-dev \
+        libnss3-dev libssl-dev \
+        libreadline-dev libffi-dev wget \
+        && apt -y autoremove
+
+# Install python 3.7
+RUN wget https://www.python.org/ftp/python/3.7.3/Python-3.7.3.tar.xz \
+    && tar -xf Python-3.7.3.tar.xz && cd Python-3.7.3 \
+    && ./configure --enable-optimizations \
+    && make -j "${N_JOBS}" \
+    && make altinstall
+
+RUN python3.7 --version
+RUN pip --version
+
+# Install virtualenv
+RUN pip install --upgrade virtualenv
+
+
 # install system dependencies
 RUN ${RETRY} apt -y install -qq --no-install-recommends \
-        python3 virtualenv python3-pip python3-venv \
         wget lbzip2 patch sudo \
     && apt -y autoremove
 
@@ -303,7 +324,7 @@ RUN ${RETRY} apt -y install -qq --no-install-recommends \
 RUN dpkg --add-architecture i386 \
     && ${RETRY} apt -y update -qq \
     && ${RETRY} apt -y install -qq --no-install-recommends \
-        build-essential ccache git python3 python3-dev \
+        build-essential ccache git \
         libncurses5:i386 libstdc++6:i386 libgtk2.0-0:i386 \
         libpangox-1.0-0:i386 libpangoxft-1.0-0:i386 libidn11:i386 \
         zip zlib1g-dev zlib1g:i386 \
@@ -323,7 +344,8 @@ RUN usermod -append --groups sudo ${USER}
 RUN echo "%sudo ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 
-RUN pip3 install --upgrade cython==0.29.7
+RUN pip install --upgrade --ignore-installed setuptools
+RUN pip install --upgrade cython==0.28.3
 
 WORKDIR ${WORK_DIR}
 COPY --chown=user:user . ${WORK_DIR}
@@ -333,5 +355,4 @@ USER ${USER}
 # install python-for-android from current branch
 RUN virtualenv --python=python3 venv \
     && . venv/bin/activate \
-    && pip3 install -e .
-
+    && pip install -e .
