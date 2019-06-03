@@ -61,7 +61,7 @@ class GRPCRecipe(CythonRecipe):
             shprint(sh.rm, "-rf", source_dir)
             # TODO Fix this hardcoded path
             self.apply_patch(
-                "/home/user/admp/p4a-recipes/grpcio/fix_cares.patch", arch.arch
+                "/home/user/admp/p4a-recipes/grpc/fix_cares.patch", arch.arch
             )
 
     def build_arch(self, arch):
