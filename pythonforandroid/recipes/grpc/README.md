@@ -29,6 +29,5 @@ docker build --tag p4a .
 
 ``` bash
 cd /home/user/python_project
-docker run -it --rm -v $(pwd):/home/user/project p4a /bin/sh -c '. venv/bin/activate && cd /home/user/project && p4a apk --sdk-dir /opt/android/android-sdk --ndk-dir /opt/android/android-ndk --android_api 27 --private . --package=com.android.project --name "TEST P4A Grpc" --version 0.1.0 --bootstrap=sdl2 --requirements=hostpython3,python3,googleapis-common-protos,hbmqtt,pyyaml,pyjwt,pytz,librt,grpc,grpcio --permission INTERNET'
+docker run -it --rm -v $(pwd):/home/user/project p4a /bin/sh -c '. venv/bin/activate && cd /home/user/project && p4a apk --sdk-dir /opt/android/android-sdk --ndk-dir /opt/android/android-ndk --android_api 27 --private . --package=com.android.project --name "TEST P4A Grpc" --version 0.1.0 --bootstrap=sdl2 --requirements=hostpython3,python3,googleapis-common-protos,hbmqtt,pyyaml,pyjwt,pytz,librt,grpcio --permission INTERNET'
 ```
-
